@@ -64,8 +64,13 @@ def parse(driver, link, pages_count=1):
         link = card.get_attribute("href")
         brand = card.find_element(By.CSS_SELECTOR, "strong.brand-name")
         card_name = card.find_element(By.CSS_SELECTOR, "span.goods-name")
-        price = card.find_element(By.CSS_SELECTOR, "span.price")
-        
-
+        driver.get(link)
+        id = driver.find_element(By.CSS_SELECTOR, "p.product-article")
+        name = driver.find_element(By.CSS_SELECTOR, "h1")
+        price = driver.find_element(By.CSS_SELECTOR, "span.price-block__price")
+        old_price = driver.find_element(By.CSS_SELECTOR, "del.price-block__old-price")
+        description = driver.find_element(By.CSS_SELECTOR, "p.collapsable__text")
+        rating = driver.find_element(By.CSS_SELECTOR, "span.address-rate-mini")
+        id.text.replace("Арт: ", "")
 if __name__ == "__main__":
     main(*sys.argv)
