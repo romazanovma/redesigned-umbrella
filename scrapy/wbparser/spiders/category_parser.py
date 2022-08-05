@@ -4,6 +4,11 @@ import json
 import scrapy
 
 
+CATEGORY_MENU = "https://www.wildberries.ru/webapi/menu/main-menu-ru-ru.json"
+SUBCATEGORY_URL = "https://catalog.wb.ru/catalog/men_clothes/catalog?curr=rub&lang=ru&locale=ru&"
+PRODUCTS_URL = "https://card.wb.ru/cards/detail?locale=ru&lang=ru&curr=rub&dest=-1075831&nm="
+
+
 class MySpider(scrapy.Spider):
     name = 'wb'
     allowed_domains = ['wildberries.ru/']
@@ -19,7 +24,7 @@ class MySpider(scrapy.Spider):
             exit()
 
     def start_requests(self):
-        url = "https://www.wildberries.ru/webapi/menu/main-menu-ru-ru.json"
+        url = CATEGORY_MENU
         yield scrapy.Request(url, callback=self.get_query)
 
     def get_query(self, response):
@@ -27,7 +32,7 @@ class MySpider(scrapy.Spider):
         subcategory_object = [subcategory for subcategory in category_object["childs"] if subcategory["name"]==self.subcategory][0]
         subcategory_query = subcategory_object["query"]
         self.log(f'Got query for subcategory: {subcategory_query}')
-        url = f"https://catalog.wb.ru/catalog/men_clothes/catalog?curr=rub&lang=ru&locale=ru&{subcategory_query}&page={self.page}"
+        url = f"{SUBCATEGORY_URL}{subcategory_query}&page={self.page}"
         # for category in json.loads(response.body):
         #     if category["name"] == category_name:
         #         for subcategory in category["childs"]:
@@ -40,7 +45,7 @@ class MySpider(scrapy.Spider):
 
     def parse_category(self, response):
         products_list = json.loads(response.body)["data"]["products"]
-        url = f"https://card.wb.ru/cards/detail?locale=ru&lang=ru&curr=rub&dest=-1075831&nm="
+        url = PRODUCTS_URL
         for product in products_list:
             url += f'{product["id"]};'
         yield scrapy.Request(url, callback=self.parse_card,dont_filter=True)
