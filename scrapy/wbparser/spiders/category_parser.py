@@ -65,6 +65,6 @@ class MySpider(scrapy.Spider):
                     "sizes": [
                         {"name": size["name"], "count": functools.reduce(lambda x,y: x+y['qty'],size["stocks"],0)} for size in card["sizes"]
                         ],
-                    # "balance": size["stocks"]
+                    # "count": size["stocks"]
                 }
                 f.write(f'{parsed_card}\n')
