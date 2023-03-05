@@ -41,6 +41,7 @@ class MySpider(scrapy.Spider):
         #                 self.log(f'Got query for subcategory: {subcategory_query}')
         #                 break
         #         break
+        #TODO:Разобраться с куском кода и решить что делать
         yield scrapy.Request(url, callback=self.parse_category,dont_filter=True)
 
     def parse_category(self, response):
